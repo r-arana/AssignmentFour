@@ -77,6 +77,7 @@ public class RestaurantListController {
     private boolean requestedDijkstraPath = false;
     private boolean isAskingForDirections = false;
     private boolean found = false;
+    private double totalDistanceTraveled;
 
     public void initialize(){
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -130,6 +131,7 @@ public class RestaurantListController {
         String searchBarBot = searchBar.getText().trim();
         BoundedQueue<Restaurant> results;
         isAskingForDirections = false;
+        found = false;
 
         clearDistanceValues();
 
@@ -141,8 +143,8 @@ public class RestaurantListController {
                 results = getResultsQueue(searchBarTop);
             }
 
-            // While our queue is not empty
-            while (!results.isEmpty()){
+            // While our queue is not null and not empty
+            while (results != null && !results.isEmpty()){
                 searchResults.add(results.dequeue());
             }
 
@@ -152,19 +154,26 @@ public class RestaurantListController {
 
             Restaurant startVertex;
             Restaurant endVertex;
+            Restaurant container;
+            BinarySearchTree<Restaurant> tree = restaurantApp.getBinarySearchTree();
 
             results = getResultsQueue(searchBarTop);
             // We can allow this to go into our startVertex if found is true
-            if (found){
+            if (results != null && found){
                 startVertex = results.dequeue();
 
+                found = false;
                 results = getResultsQueue(searchBarBot);
 
-                if (found){
+
+                if (results != null && found){
                     endVertex = results.dequeue();
 
                     if (startVertex.equals(endVertex)){
                         searchResults.add(startVertex);
+                    }
+                    else if (!tree.contains(endVertex)){
+                        found = false;
                     }
                     else{
 
@@ -189,9 +198,12 @@ public class RestaurantListController {
                             found = false;
                         }
                         else{
+                            totalDistanceTraveled = 0;
                             // While our queue is not empty
                             while (!results.isEmpty()){
-                                searchResults.add(results.dequeue());
+                                container = results.dequeue();
+                                totalDistanceTraveled += container.getDistanceAsDouble();
+                                searchResults.add(container);
                             }
                         }
 
@@ -203,6 +215,7 @@ public class RestaurantListController {
 
         if (found){
             System.out.println("Found it.");
+            System.out.println("Total distance traveled: " + totalDistanceTraveled);
 
             // Update the information displayed
             restaurantTable.setItems(searchResults);
@@ -336,12 +349,15 @@ public class RestaurantListController {
                     container = minHeap.dequeue();
 
                     // If the element's distance is within the bounds of our radius then we add it to our list
-                    if (Integer.valueOf(container.getDistance()) <= radius) {
+                    if (Double.valueOf(container.getDistance()) <= radius) {
                         queue.enqueue(container);
                         //searchResults.add(container);
                     }
                 }
-                found = true;
+
+                if (!queue.isEmpty()){
+                    found = true;
+                }
             }
         }
         else if (searchType.equals(Search.NAME)){
@@ -451,16 +467,21 @@ public class RestaurantListController {
     private int getRadius(){
         String radiusText = radiusTextField.getText().trim().replace(",", "");
         radiusError.setVisible(false);
-
-        // First we make sure that our text field is not empty
-        if (radiusText == null || radiusText.equals("")){
-            return 0;
+        try {
+            // First we make sure that our text field is not empty
+            if (radiusText == null || radiusText.equals("")) {
+                return 0;
+            }
+            // If the textfield is not empty, then we can safely check to make sure it's actually a number.
+            else if (Pattern.matches("[0-9]+", radiusText) && (Integer.valueOf(radiusText) < Integer.MAX_VALUE)) {
+                return Integer.valueOf(radiusText);
+            } else {
+                radiusError.setVisible(true);
+                return 0;
+            }
         }
-        // If the textfield is not empty, then we can safely check to make sure it's actually a number.
-        else if (Pattern.matches("[0-9]+" ,radiusText) && (Integer.valueOf(radiusText) < Integer.MAX_VALUE)){
-            return Integer.valueOf(radiusText);
-        }
-        else{
+        catch (NumberFormatException e){
+            System.err.println(e.getMessage());
             radiusError.setVisible(true);
             return 0;
         }
@@ -492,9 +513,9 @@ public class RestaurantListController {
         }
 
         // Add vertices
-        tree.reset(BinaryTreeInterface.TraversalOrder.INORDER);
+        int numberOfElements = tree.reset(BinaryTreeInterface.TraversalOrder.INORDER);
 
-        for (int i = 0; i < numberOfVertices; i++){
+        for (int i = 0; i < numberOfElements; i++){
             Restaurant currentRestaurant = tree.getNext(BinaryTreeInterface.TraversalOrder.INORDER);
 
             // Add our current restaurant to the graph
@@ -557,7 +578,7 @@ public class RestaurantListController {
 
                 currentVertex = minHeap.dequeue();
 
-                System.out.println(currentVertex + "\n");
+                //System.out.println(currentVertex + "\n");
 
                 graph.markVertex(currentVertex);
                 // Fixing our adjusted distance calculation done in our getMinimumHeap() method.

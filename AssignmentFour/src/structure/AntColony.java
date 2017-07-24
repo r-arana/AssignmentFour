@@ -26,11 +26,11 @@ public class AntColony{
     private ArrayList<Integer> pheromoneLevels;
     private ArrayList<Restaurant> bestSolution;
     private int numberOfVertices;
-    private int shortestDistance;
+    private double shortestDistance;
     private int numberOfSolutionsSubmitted;
 
     private ArrayList<Restaurant> path;
-    private int pathDistance;
+    private double pathDistance;
     private Restaurant startVertex;
     private Restaurant endVertex;
 
@@ -248,8 +248,8 @@ public class AntColony{
         System.out.println("Ant deaths: " + antDeaths);
         System.out.println("Shorter paths found: " + antFoundShorterPath);
         System.out.println("Longer paths used: " + antTookLongerPath);
-        System.out.println("Shorter path used: " + antTookShorterPath + "\n");
-        System.out.println("Shortest distance route found: " + shortestDistance);
+        System.out.println("Shorter path used: " + antTookShorterPath);
+        //System.out.println("Shortest distance route found: " + shortestDistance);
         System.out.println();
     }
 

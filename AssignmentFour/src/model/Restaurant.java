@@ -100,6 +100,9 @@ public class Restaurant implements Comparable<Restaurant>, Serializable{
     }
 
     public double getDistanceAsDouble(){
+        if (distance.get().equals("")){
+            return 0;
+        }
         return Double.valueOf(distance.get());
     }
 

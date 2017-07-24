@@ -15,10 +15,10 @@
          <children>
             <TextField fx:id="startPoint" layoutX="129.0" layoutY="22.0" onAction="#handleEnterPressed" prefHeight="42.0" prefWidth="521.0" promptText="Starting Point" />
             <TextField fx:id="searchBar" layoutX="129.0" layoutY="91.0" onAction="#handleEnterPressed" prefHeight="42.0" prefWidth="521.0" promptText="Enter the restaurant's name, phone number, or coordinates." />
-            <TextField fx:id="radiusTextField" layoutX="289.0" layoutY="138.0" onAction="#handleEnterPressed" prefHeight="31.0" prefWidth="57.0" />
+            <TextField fx:id="radiusTextField" layoutX="289.0" layoutY="138.0" onAction="#handleEnterPressed" prefHeight="31.0" prefWidth="64.0" />
             <Button fx:id="resetButton" layoutX="593.0" layoutY="138.0" mnemonicParsing="false" onAction="#resetButtonPressed" prefHeight="31.0" prefWidth="57.0" text="Reset" />
             <Label fx:id="errorLabel" layoutX="666.0" layoutY="102.0" prefHeight="21.0" prefWidth="92.0" text="Invalid Input" textFill="RED" visible="false" />
-            <Label fx:id="noMatchesLabel" layoutX="666.0" layoutY="101.0" prefHeight="21.0" prefWidth="137.0" text="No matches found." textFill="RED" visible="false" />
+            <Label fx:id="noMatchesLabel" layoutX="664.0" layoutY="70.0" prefHeight="21.0" prefWidth="137.0" text="No matches found." textFill="RED" visible="false" />
             <Label layoutX="129.0" layoutY="138.0" prefHeight="31.0" prefWidth="160.0" text="Limit search to within">
                <font>
                   <Font name="System Bold" size="15.0" />
@@ -39,7 +39,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label fx:id="radiusError" layoutX="666.0" layoutY="102.0" prefHeight="21.0" prefWidth="107.0" text="Invalid distance" textFill="RED" visible="false" />
+            <Label fx:id="radiusError" layoutX="404.0" layoutY="143.0" prefHeight="21.0" prefWidth="107.0" text="Invalid distance" textFill="RED" visible="false" />
             <Button fx:id="dijkstraButton" layoutX="680.0" layoutY="138.0" mnemonicParsing="false" onAction="#handleDijkstraPath" text="Dijkstra Path" />
             <Button fx:id="antButton" layoutX="813.0" layoutY="138.0" mnemonicParsing="false" onAction="#handleAntsPath" text="Ant Colony Path" />
          </children></AnchorPane>
