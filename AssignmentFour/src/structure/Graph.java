@@ -17,14 +17,14 @@ public class Graph<E extends Comparable<E>> implements GraphInterface<E>{
 
     private boolean[] mark;
     private E[] vertices;
-    private int[][] edge;
+    private double[][] edge;
 
     public Graph(){
         numberOfVertices = 0;
         maxVertices = DEFAULT_SIZE;
         mark = new boolean[DEFAULT_SIZE];
         vertices = (E[]) new Comparable[DEFAULT_SIZE];
-        edge = new int[DEFAULT_SIZE][DEFAULT_SIZE];
+        edge = new double[DEFAULT_SIZE][DEFAULT_SIZE];
     }
 
     public Graph(int maxSize){
@@ -32,7 +32,7 @@ public class Graph<E extends Comparable<E>> implements GraphInterface<E>{
         maxVertices = maxSize;
         mark = new boolean[maxSize];
         vertices = (E[]) new Comparable[maxSize];
-        edge = new int[maxSize][maxSize];
+        edge = new double[maxSize][maxSize];
     }
 
     /**
@@ -63,8 +63,6 @@ public class Graph<E extends Comparable<E>> implements GraphInterface<E>{
         }
     }
 
-
-
     /**
      * Returns true if the graph contains the passed vertex;
      * otherwise, returns false.
@@ -94,7 +92,7 @@ public class Graph<E extends Comparable<E>> implements GraphInterface<E>{
      * @param weight
      */
     @Override
-    public void addEdge(E fromVertex, E toVertex, int weight) throws IndexOutOfBoundsException {
+    public void addEdge(E fromVertex, E toVertex, double weight) throws IndexOutOfBoundsException {
         int row = indexIs(fromVertex);
         int column = indexIs(toVertex);
 
@@ -117,7 +115,7 @@ public class Graph<E extends Comparable<E>> implements GraphInterface<E>{
      * @return integer value of weight
      */
     @Override
-    public int weightIs(E fromVertex, E toVertex) throws IndexOutOfBoundsException{
+    public double weightIs(E fromVertex, E toVertex) throws IndexOutOfBoundsException{
         int row = indexIs(fromVertex);
         int column = indexIs(toVertex);
 

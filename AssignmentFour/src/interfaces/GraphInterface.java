@@ -32,7 +32,7 @@ public interface GraphInterface<E> {
      *  @param toVertex
      *  @param weight
      */
-    void addEdge(E fromVertex, E toVertex, int weight);
+    void addEdge(E fromVertex, E toVertex, double weight);
 
     /** If edge from fromVertex to toVertex exists, returns the weight of edge;
      *  otherwise, returns a special "null-edge" value.
@@ -41,7 +41,7 @@ public interface GraphInterface<E> {
      *  @param toVertex
      *  @return integer value of weight
      */
-     int weightIs(E fromVertex, E toVertex);
+     double weightIs(E fromVertex, E toVertex);
 
     /** Returns a queue of the vertices that are adjacent from vertex.
      *

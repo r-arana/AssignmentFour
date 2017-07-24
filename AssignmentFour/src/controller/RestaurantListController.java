@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import model.Restaurant;
+import structure.AntColony;
 import structure.BinarySearchTree;
 import structure.Graph;
 import structure.PriorityQueue;
@@ -63,12 +64,17 @@ public class RestaurantListController {
     @FXML
     private Button resetButton;
     @FXML
-    private ImageView restaurantImageView;
+    private Button dijkstraButton;
+    @FXML
+    private Button antButton;
+
 
     private enum Search {COORDINATES, PHONE_NUMBER, NAME}
 
     private RestaurantListJavaFXView restaurantApp;
     private ObservableList<Restaurant> searchResults = FXCollections.observableArrayList();
+    private boolean requestedLotsOfAnts = false;
+    private boolean requestedDijkstraPath = false;
     private boolean isAskingForDirections = false;
     private boolean found = false;
 
@@ -109,11 +115,23 @@ public class RestaurantListController {
         restaurantTable.setItems(restaurantApp.getRestaurantData());
     }
 
+    public void handleDijkstraPath(){
+        requestedDijkstraPath = true;
+        handleEnterPressed();
+    }
+
+    public void handleAntsPath(){
+        requestedLotsOfAnts = true;
+        handleEnterPressed();
+    }
+
     public void handleEnterPressed(){
         String searchBarTop = startPoint.getText().trim();
         String searchBarBot = searchBar.getText().trim();
         BoundedQueue<Restaurant> results;
         isAskingForDirections = false;
+
+        clearDistanceValues();
 
         if (searchBarTop.equals("") || searchBarBot.equals("")){
             if (searchBarTop.equals("")){
@@ -145,12 +163,39 @@ public class RestaurantListController {
                 if (found){
                     endVertex = results.dequeue();
 
-                    //results = getShortestPath(startVertex, endVertex);
-                    results = getDijkstraPath(startVertex, endVertex);
+                    if (startVertex.equals(endVertex)){
+                        searchResults.add(startVertex);
+                    }
+                    else{
 
-                    // While our queue is not empty
-                    while (!results.isEmpty()){
-                        searchResults.add(results.dequeue());
+                        if (requestedDijkstraPath){
+                            System.out.println("\nCreating Dijkstra path.");
+                            results = getDijkstraPath(startVertex, endVertex);
+                        }
+                        else if (requestedLotsOfAnts){
+                            System.out.println("\nCreating ant colony path.");
+                            AntColony antColony = new AntColony(getGraph(startVertex), startVertex, endVertex);
+
+                            antColony.sendOutTheAnts(2000);
+
+                            results = antColony.getBestAntSolution();
+                        }
+                        else{
+                            System.out.println("\nCreating standard path.");
+                            results = getShortestPath(startVertex, endVertex);
+                        }
+
+                        if (results == null){
+                            found = false;
+                        }
+                        else{
+                            // While our queue is not empty
+                            while (!results.isEmpty()){
+                                searchResults.add(results.dequeue());
+                            }
+                        }
+
+
                     }
                 }
             }
@@ -167,6 +212,8 @@ public class RestaurantListController {
             noMatchesLabel.setVisible(true);
         }
 
+        requestedDijkstraPath = false;
+        requestedLotsOfAnts = false;
     }
 
     private BoundedQueue<Restaurant> getResultsQueue(String input){
@@ -558,14 +605,14 @@ public class RestaurantListController {
         Restaurant currentVertex = startVertex;
 
         boolean found = false;
-        int newDistance;
+        double newDistance;
 
         do{
             if (currentVertex.compareTo(endVertex) == 0){
                 found = true;
             }
             else {
-                System.out.println(currentVertex);
+                //System.out.println(currentVertex);
 
                 graph.markVertex(currentVertex);
                 // This will return a minHeap for the total distance away from our start
@@ -583,10 +630,10 @@ public class RestaurantListController {
                     // We only add vertices that are not already marked
                     if (!graph.isMarked(adjacentVertex)) {
 
-                        newDistance = currentVertex.getDistanceAsInteger() + graph.weightIs(currentVertex, adjacentVertex);
+                        newDistance = currentVertex.getDistanceAsDouble() + graph.weightIs(currentVertex, adjacentVertex);
 
                         // If our new distance is less than the distance currently inside of our vertex
-                        if (newDistance < adjacentVertex.getDistanceAsInteger()) {
+                        if (newDistance < adjacentVertex.getDistanceAsDouble()) {
                             // Every node will contain the total distance traveled from the starting node.
                             adjacentVertex.setDistance(newDistance);
                             int index = list.indexOf(adjacentVertex);
@@ -610,16 +657,20 @@ public class RestaurantListController {
 
         int index = list.indexOf(endVertex);
         currentVertex = endVertex;
-        Restaurant previousVertex;
+        Restaurant nextVertex;
         BoundedStack<Restaurant> stack = new BoundedStack<>(graph.getNumberOfVertices());
         stack.push(currentVertex);
 
         while (index != -1) {
-            previousVertex = listPreviousElement.get(index);
-            stack.push(previousVertex);
-            index = list.indexOf(previousVertex);
-            currentVertex.setDistance(graph.weightIs(previousVertex, currentVertex));
-            currentVertex = previousVertex;
+            nextVertex = listPreviousElement.get(index);
+            stack.push(nextVertex);
+
+            currentVertex.setDistance(graph.weightIs(nextVertex, currentVertex));
+            currentVertex = nextVertex;
+            index = list.indexOf(currentVertex);
+            if (index == -1){
+                currentVertex.setDistance("");
+            }
         }
 
         while (!stack.isEmpty()) {
@@ -628,41 +679,6 @@ public class RestaurantListController {
         }
 
         return solution;
-    }
-
-    // Used for dijkstra path
-    private PriorityQueue<Restaurant> getMinimumHeap(Restaurant currentVertex, Graph<Restaurant> graph){
-
-        BoundedQueue<Restaurant> queue = graph.getToVertices(currentVertex);
-        int numberOfVertices = queue.size();
-
-        // Instantiate our minHeap to fill it from the queue
-        PriorityQueue<Restaurant> minHeap;
-        minHeap = new PriorityQueue<Restaurant>(numberOfVertices, Restaurant.getDistanceComparator());
-        int newDistance;
-
-        // While the queue is not empty
-        while (!queue.isEmpty()){
-            Restaurant adjacentVertex = queue.dequeue();
-
-            // We only add vertices that are not already marked
-            if (!graph.isMarked(adjacentVertex)) {
-
-                newDistance = currentVertex.getDistanceAsInteger() + graph.weightIs(currentVertex, adjacentVertex);
-
-                // If our new distance is less than the distance currently inside of our vertex
-                if (newDistance < adjacentVertex.getDistanceAsInteger()) {
-                    // Every node will contain the total distance traveled from the starting node.
-                    adjacentVertex.setDistance(newDistance);
-
-                }
-                // Grab the elements inside of our queue, and add it to our heap.
-                minHeap.enqueue(adjacentVertex);
-            }
-        }
-
-        //System.out.println(minHeap);
-        return minHeap;
     }
 
     //http://www.zparacha.com/phone_number_javascript_regex/

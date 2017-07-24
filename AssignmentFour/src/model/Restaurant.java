@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleStringProperty;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Comparator;
 
 /**
@@ -25,7 +27,8 @@ public class Restaurant implements Comparable<Restaurant>, Serializable{
     private SimpleStringProperty phoneNumber;
     private SimpleStringProperty photo;
     private SimpleStringProperty distance;
-    //private int distance = 0;
+    // https://stackoverflow.com/questions/12806278/double-decimal-formatting-in-java
+    NumberFormat formatter = new DecimalFormat("#0.00");
 
     public Restaurant(){
         this.name = new SimpleStringProperty("");
@@ -70,7 +73,7 @@ public class Restaurant implements Comparable<Restaurant>, Serializable{
     // Returns the distance between two locations to the nearest mile.
     // Haversine formula
     // http://www.movable-type.co.uk/scripts/latlong.html
-    public static int calculateDistance(Restaurant o1, Restaurant o2){
+    public static double calculateDistance(Restaurant o1, Restaurant o2){
         // Longitude and latitude are already in decimal degrees
         double earthRadius = 3959; //miles
 
@@ -89,15 +92,15 @@ public class Restaurant implements Comparable<Restaurant>, Serializable{
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-        return (int)((earthRadius * c) + 0.5);
+        return earthRadius * c;
     }
 
     public String getDistance() {
         return distance.get();
     }
 
-    public int getDistanceAsInteger(){
-        return Integer.valueOf(distance.get());
+    public double getDistanceAsDouble(){
+        return Double.valueOf(distance.get());
     }
 
     public SimpleStringProperty distanceProperty(){
@@ -108,8 +111,8 @@ public class Restaurant implements Comparable<Restaurant>, Serializable{
         this.distance.set(distance);
     }
 
-    public void setDistance(int distance){
-        this.distance.set(String.valueOf(distance));
+    public void setDistance(double distance){
+        this.distance.set(formatter.format(distance));
     }
 
     public String getName() {
@@ -294,7 +297,8 @@ public class Restaurant implements Comparable<Restaurant>, Serializable{
             @Override
             public int compare(Restaurant o1, Restaurant o2) {
                 // Rounding to nearest whole number
-                return (Integer.valueOf(o1.getDistance()) - Integer.valueOf(o2.getDistance()));
+                //return (Integer.valueOf(o1.getDistance()) - Integer.valueOf(o2.getDistance()));
+                return (int)((o1.getDistanceAsDouble() * 100) -(o2.getDistanceAsDouble() * 100));
             }
         };
         return comparator;

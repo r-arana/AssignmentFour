@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
+
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="852.0" prefWidth="435.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegistrationController">
    <children>
       <TextField fx:id="firstName" layoutX="158.0" layoutY="62.0" />
       <TextField fx:id="lastName" layoutX="158.0" layoutY="111.0" />
+      <TextField fx:id="ssn" alignment="CENTER" layoutX="158.0" layoutY="159.0" promptText="Only Digits" />
+      <TextField fx:id="dob" alignment="CENTER" layoutX="158.0" layoutY="205.0" promptText="MM/DD/YYYY" />
+      <TextField fx:id="phoneNumber" alignment="CENTER" layoutX="159.0" layoutY="295.0" promptText="Only Digits" />
+      <TextField fx:id="email" layoutX="158.0" layoutY="343.0" />
+      <TextField fx:id="username" layoutX="158.0" layoutY="394.0" />
       <PasswordField fx:id="password" layoutX="158.0" layoutY="443.0" />
       <PasswordField fx:id="confirmPass" layoutX="158.0" layoutY="491.0" />
       <Label layoutX="14.0" layoutY="67.0" text="First Name:" />
       <Label layoutX="14.0" layoutY="116.0" text="Last Name:" />
       <Label layoutX="14.0" layoutY="164.0" text="SSN:" />
       <Label layoutX="14.0" layoutY="210.0" text="Date of Birth:" />
-      <TextField fx:id="email" layoutX="158.0" layoutY="343.0" />
-      <TextField fx:id="username" layoutX="158.0" layoutY="394.0" />
       <Label layoutX="14.0" layoutY="256.0" text="Gender:" />
       <Label layoutX="14.0" layoutY="300.0" text="Phone Number:" />
       <Label layoutX="14.0" layoutY="348.0" text="Email:" />
@@ -35,13 +43,11 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="ssn" alignment="CENTER" layoutX="158.0" layoutY="159.0" promptText="Only Digits" />
       <Label fx:id="registrationFailed" layoutX="177.0" layoutY="758.0" prefHeight="27.0" prefWidth="150.0" text="Registration Failed" textFill="#fc0000" visible="false">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="phoneNumber" alignment="CENTER" layoutX="159.0" layoutY="295.0" promptText="Only Digits" />
       <Label fx:id="errorInfName" layoutX="352.0" layoutY="67.0" text="*" textFill="RED" visible="false">
          <font>
             <Font size="24.0" />
@@ -87,7 +93,6 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-      <TextField fx:id="dob" alignment="CENTER" layoutX="158.0" layoutY="205.0" promptText="MM/DD/YYYY" />
       <Label fx:id="errorInPicture" layoutX="90.0" layoutY="634.0" text="*" textFill="RED" visible="false">
          <font>
             <Font size="24.0" />

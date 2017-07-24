@@ -9,15 +9,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.24866310160427807" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="750.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RestaurantListController">
+<SplitPane dividerPositions="0.24866310160427807" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="750.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RestaurantListController">
   <items>
     <AnchorPane minHeight="50.0" minWidth="0.0" prefHeight="201.0" prefWidth="1089.0">
          <children>
+            <TextField fx:id="startPoint" layoutX="129.0" layoutY="22.0" onAction="#handleEnterPressed" prefHeight="42.0" prefWidth="521.0" promptText="Starting Point" />
             <TextField fx:id="searchBar" layoutX="129.0" layoutY="91.0" onAction="#handleEnterPressed" prefHeight="42.0" prefWidth="521.0" promptText="Enter the restaurant's name, phone number, or coordinates." />
-            <Label fx:id="errorLabel" layoutX="528.0" layoutY="91.0" prefHeight="21.0" prefWidth="92.0" text="Invalid Input" textFill="RED" visible="false" />
-            <Label fx:id="noMatchesLabel" layoutX="506.0" layoutY="91.0" prefHeight="21.0" prefWidth="137.0" text="No matches found." textFill="RED" visible="false" />
-            <Button fx:id="resetButton" layoutX="593.0" layoutY="138.0" mnemonicParsing="false" onAction="#resetButtonPressed" prefHeight="31.0" prefWidth="57.0" text="Reset" />
             <TextField fx:id="radiusTextField" layoutX="289.0" layoutY="138.0" onAction="#handleEnterPressed" prefHeight="31.0" prefWidth="57.0" />
+            <Button fx:id="resetButton" layoutX="593.0" layoutY="138.0" mnemonicParsing="false" onAction="#resetButtonPressed" prefHeight="31.0" prefWidth="57.0" text="Reset" />
+            <Label fx:id="errorLabel" layoutX="666.0" layoutY="102.0" prefHeight="21.0" prefWidth="92.0" text="Invalid Input" textFill="RED" visible="false" />
+            <Label fx:id="noMatchesLabel" layoutX="666.0" layoutY="101.0" prefHeight="21.0" prefWidth="137.0" text="No matches found." textFill="RED" visible="false" />
             <Label layoutX="129.0" layoutY="138.0" prefHeight="31.0" prefWidth="160.0" text="Limit search to within">
                <font>
                   <Font name="System Bold" size="15.0" />
@@ -28,8 +29,6 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label fx:id="radiusError" layoutX="303.0" layoutY="101.0" prefHeight="21.0" prefWidth="107.0" text="Invalid distance" textFill="RED" visible="false" />
-            <TextField fx:id="startPoint" layoutX="129.0" layoutY="22.0" onAction="#handleEnterPressed" prefHeight="42.0" prefWidth="521.0" promptText="Starting Point" />
             <Label alignment="CENTER_RIGHT" contentDisplay="TOP" layoutX="14.0" layoutY="27.0" prefHeight="31.0" prefWidth="107.0" text="Starting Point:">
                <font>
                   <Font name="System Bold" size="15.0" />
@@ -40,6 +39,9 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
+            <Label fx:id="radiusError" layoutX="666.0" layoutY="102.0" prefHeight="21.0" prefWidth="107.0" text="Invalid distance" textFill="RED" visible="false" />
+            <Button fx:id="dijkstraButton" layoutX="680.0" layoutY="138.0" mnemonicParsing="false" onAction="#handleDijkstraPath" text="Dijkstra Path" />
+            <Button fx:id="antButton" layoutX="813.0" layoutY="138.0" mnemonicParsing="false" onAction="#handleAntsPath" text="Ant Colony Path" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
